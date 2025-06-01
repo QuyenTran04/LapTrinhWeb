@@ -1,0 +1,11 @@
+﻿@model TranAQuyen_2280602684_BT3.Models.Category
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<h2>Delete Category</h2>
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <p>Are you sure you want to delete @Model.Name?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>

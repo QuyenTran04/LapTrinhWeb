@@ -1,0 +1,81 @@
+﻿@model IEnumerable<TranAQuyen_2280602684_BT3.Models.Product>
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h3 class="fw-bold mb-4">Quản lý sản phẩm</h3>
+
+    <form asp-action="Index" method="get" class="row g-2 align-items-center mb-4">
+        <div class="col-md-4">
+            <input type="text" name="searchString" class="form-control" placeholder="Tìm sản phẩm..." value="@Context.Request.Query["searchString"]" />
+        </div>
+        <div class="col-md-4">
+            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Sắp xếp theo --</option>
+                <option value="name_asc" selected="@(ViewContext.HttpContext.Request.Query["sortOrder"].ToString() == "name_asc")">Tên A-Z</option>
+                <option value="name_desc" selected="@(ViewContext.HttpContext.Request.Query["sortOrder"].ToString() == "name_desc")">Tên Z-A</option>
+                <option value="price_asc" selected="@(ViewContext.HttpContext.Request.Query["sortOrder"].ToString() == "price_asc")">Giá tăng dần</option>
+                <option value="price_desc" selected="@(ViewContext.HttpContext.Request.Query["sortOrder"].ToString() == "price_desc")">Giá giảm dần</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Tìm</button>
+            <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-clockwise"></i> Reset</a>
+        </div>
+    </form>
+
+    <a class="btn btn-success mb-3" asp-area="Admin" asp-controller="Product" asp-action="Add">
+        <i class="bi bi-plus-circle me-1"></i> Thêm sản phẩm
+    </a>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                    <th>Danh mục</th>
+                    <th>Hình ảnh</th>
+                    <th style="width: 170px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@product.Name</td>
+                        <td>@product.Price.ToString("N0") VND</td>
+                        <td class="text-truncate" style="max-width: 250px;">@product.Description</td>
+                        <td>@(product.Category?.Name ?? "Không có danh mục")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(product.ImageUrl))
+                            {
+                                <img src="@product.ImageUrl" alt="@product.Name" width="80" height="80" class="img-thumbnail" />
+                            }
+                            else
+                            {
+                                <span class="text-muted fst-italic">Không có ảnh</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i> Xem
+                                </a>
+                                <a asp-action="Update" asp-route-id="@product.Id" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
