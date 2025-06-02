@@ -1,21 +1,24 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TranAQuyen_2280602684_BT3.Models;
+using TranAQuyen_2280602684_BT3.Repositories;
+using TranAQuyen_2280602684_Buoi3.Repositories;
 
 namespace TranAQuyen_2280602684_BT3.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductRepository _productRepository;
+        public HomeController(IProductRepository productRepository)
         {
-            _logger = logger;
+            _productRepository = productRepository;
         }
 
-        public IActionResult Index()
+        // Hiển thị danh sách sản phẩm
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await _productRepository.GetAllAsync();
+            return View(products);
         }
 
         public IActionResult Privacy()

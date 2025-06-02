@@ -36,11 +36,11 @@ footer {
     padding: 1rem 2rem;
     border-top: 1px solid #dee2e6;
     position: fixed;
-    width: 100%;
+    width: calc(100% - 220px); /* Chiều rộng của footer không bị che khuất */
     bottom: 0;
-    left: 0;
-    margin-left: 220px;
+    left: 220px;
     text-align: center;
 }
+
 
 /* Responsive for mobile */

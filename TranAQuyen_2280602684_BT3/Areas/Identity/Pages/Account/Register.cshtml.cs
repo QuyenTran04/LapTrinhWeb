@@ -136,6 +136,32 @@ namespace TranAQuyen_2280602684_BT3.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                // Nếu người dùng chưa đăng nhập, chuyển hướng tới trang đăng nhập
+                return RedirectToPage("/Account/Login");
+            }
+
+            var roles = await _userManager.GetRolesAsync(currentUser);
+
+            string roleToAssign = SD.Role_Customer; // Vai trò mặc định là User
+
+            // Nếu là Admin, cho phép chọn vai trò khác
+            if (roles.Contains("Admin"))
+            {
+                // Nếu người Admin chọn vai trò, gán vai trò đó
+                if (!String.IsNullOrEmpty(Input.Role))
+                {
+                    roleToAssign = Input.Role;
+                }
+            }
+            else
+            {
+                // Nếu không phải Admin, chỉ có thể gán vai trò mặc định là User
+                roleToAssign = SD.Role_Customer;
+            }
             if (ModelState.IsValid)
             {
                 var user = CreateUser();

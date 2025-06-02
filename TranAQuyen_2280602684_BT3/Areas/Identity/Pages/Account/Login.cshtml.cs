@@ -123,7 +123,7 @@ namespace TranAQuyen_2280602684_BT3.Areas.Identity.Pages.Account
                     // Kiểm tra role và redirect tương ứng
                     if (roles.Contains("Admin"))
                     {
-                        return LocalRedirect(Url.Content("~/Admin/Home/Index"));
+                        return LocalRedirect(Url.Content("~/Admin/Product/Index"));
                     }
                     else if (roles.Contains("User"))
                     {
