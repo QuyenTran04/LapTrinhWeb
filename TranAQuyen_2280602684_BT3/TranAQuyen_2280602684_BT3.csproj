@@ -27,6 +27,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Register\" />
     <Folder Include="Areas\Admin\Views\Employee\" />
+    <Folder Include="Views\OrderCompleted\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\videos\" />
     <Folder Include="wwwroot\slides\" />

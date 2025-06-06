@@ -1,101 +1,181 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký tài khoản";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+<style>
+    body {
+        background: linear-gradient(135deg, #C9FFBF 0%, #FFAFBD 100%);
+        font-family: 'Montserrat', Arial, sans-serif;
+        min-height: 100vh;
+    }
 
-            <!-- Full Name -->
-            <div class="form-floating">
-                <input asp-for="Input.FullName" class="form-control" autocomplete="FullName" aria-required="true" />
-                <label asp-for="Input.FullName">Full Name</label>
-                <span asp-validation-for="Input.FullName" class="text-danger"></span>
-            </div>
+    .auth-card {
+        background: rgba(255,255,255,0.90);
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        border: none;
+        padding: 2.5rem 2rem;
+        margin-top: 2rem;
+        transition: box-shadow 0.3s;
+    }
 
-            <!-- Email -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
+        .auth-card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.19);
+        }
 
-            <!-- Password -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        border-radius: 1.5rem;
+        font-size: 1rem;
+        padding-left: 2.5rem;
+    }
 
-            <!-- Confirm Password -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
+    .form-floating label {
+        left: 2.4rem;
+    }
 
-            <!-- Role (Only visible to Admin) -->
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="form-floating mb-3">
-                    <select asp-for="Input.Role" class="form-control">
-                        <option value="User">User</option>
-                        <option value="Employee">Employee</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Customer">Customer</option>
-                    </select>
-                    <label asp-for="Input.Role">Role</label>
-                    <span asp-validation-for="Input.Role" class="text-danger"></span>
-                </div>
-            }
-            else
-            {
-                <!-- If not Admin, default to User -->
-                <input type="hidden" asp-for="Input.Role" value="User" />
-            }
+    .form-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #90a4ae;
+        font-size: 1.2rem;
+        pointer-events: none;
+    }
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
+    .form-floating {
+        position: relative;
+    }
 
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                article
-                                about setting up this ASP.NET application to support logging in via external services
-                            </a>.
-                        </p>
+    .btn-gradient {
+        background: linear-gradient(90deg,#7F7FD5 0%, #86A8E7 50%, #91EAE4 100%);
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        border-radius: 2rem;
+        transition: background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 8px rgba(79,195,247,0.15);
+    }
+
+        .btn-gradient:hover, .btn-gradient:focus {
+            background: linear-gradient(90deg,#355C7D 0%, #6C5B7B 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(79,195,247,0.28);
+        }
+
+    .text-brand {
+        font-weight: bold;
+        background: linear-gradient(90deg,#355C7D,#6C5B7B,#C06C84);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .divider {
+        text-align: center;
+        margin: 2rem 0 1rem;
+        color: #aaa;
+    }
+</style>
+
+<div class="container py-5">
+    <h1 class="text-center text-brand mb-4" style="font-size:2.5rem;">@ViewData["Title"]</h1>
+    <div class="row justify-content-center g-4">
+        <div class="col-lg-5 col-md-7">
+            <div class="auth-card">
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" autocomplete="off">
+                    <h2 class="text-center text-secondary mb-3" style="font-weight:700;">Tạo tài khoản mới</h2>
+                    <div asp-validation-summary="ModelOnly" class="text-danger small" role="alert"></div>
+
+                    <!-- Full Name -->
+                    <div class="form-floating mb-3">
+                        <i class="bi bi-person form-icon"></i>
+                        <input asp-for="Input.FullName" class="form-control" placeholder="Họ và tên" required />
+                        <label asp-for="Input.FullName">Họ và tên</label>
+                        <span asp-validation-for="Input.FullName" class="text-danger small"></span>
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <i class="bi bi-envelope form-icon"></i>
+                        <input asp-for="Input.Email" class="form-control" placeholder="Email" required />
+                        <label asp-for="Input.Email">Email</label>
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-3">
+                        <i class="bi bi-lock form-icon"></i>
+                        <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu" type="password" required autocomplete="new-password" />
+                        <label asp-for="Input.Password">Mật khẩu</label>
+                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-floating mb-3">
+                        <i class="bi bi-shield-lock form-icon"></i>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" type="password" required />
+                        <label asp-for="Input.ConfirmPassword">Xác nhận mật khẩu</label>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Role (Only visible to Admin) -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="form-floating mb-3">
+                            <i class="bi bi-person-badge form-icon"></i>
+                            <select asp-for="Input.Role" class="form-select">
+                                <option value="User ">User</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Customer">Customer</option>
+                            </select>
+                            <label asp-for="Input.Role">Phân quyền</label>
+                            <span asp-validation-for="Input.Role" class="text-danger small"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="Input.Role" value="User " />
+                    }
+
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-gradient btn-lg mt-2">Đăng ký</button>
+                </form>
+                <div class="divider">hoặc</div>
+                <section>
+                    @if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
                         <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
+                            <p class="text-muted small">
+                                Chưa cấu hình dịch vụ đăng nhập nhanh. Xem <a href="https://go.microsoft.com/fwlink/?LinkID=532715" class="text-brand">hướng dẫn</a>.
                             </p>
                         </div>
-                    </form>
-                }
-            }
-        </section>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-outline-dark rounded-pill px-4" name="provider" value="@provider.Name" title="Đăng nhập bằng @provider.DisplayName">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>@provider.DisplayName
+                                    </button>
+                                }
+                            </div>
+                        </form>
+                    }
+                </section>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-5 d-none d-md-flex align-items-center">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+                 class="img-fluid rounded-4 shadow-lg" alt="Đăng ký tài khoản" style="max-height:430px;object-fit:cover;">
+        </div>
     </div>
 </div>
 

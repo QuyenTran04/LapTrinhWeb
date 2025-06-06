@@ -27,6 +27,7 @@ namespace TranAQuyen_2280602684_BT3.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+            Response.Cookies.Delete("CartCount");
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {

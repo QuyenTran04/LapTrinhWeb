@@ -1,0 +1,14 @@
+﻿@model List<Order>
+<h2>Lịch sử đơn hàng</h2>
+@foreach (var order in Model)
+{
+    <div>
+        <strong>Ngày: @order.OrderDate</strong> - Tổng: @order.TotalPrice.ToString("N0")
+        <ul>
+            @foreach (var item in order.OrderDetails)
+            {
+                <li>@item.Product.Name x @item.Quantity</li>
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,157 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "Thanh toán";
+    ViewBag.CurrentStep = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        position: relative;
+    }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #ddd;
+            z-index: 0;
+        }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+        flex: 1;
+        position: relative;
+    }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 22px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #ddd;
+            z-index: -1;
+        }
+
+        .step i {
+            font-size: 1.75rem;
+            background-color: #f1f1f1;
+            border-radius: 50%;
+            padding: 10px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .step .label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .step.active i,
+        .step.active .label {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+    .checkout-card {
+        max-width: 550px;
+        margin: 0 auto 60px auto;
+        padding: 32px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s;
+    }
+
+        .checkout-card:hover {
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+        }
+
+        .checkout-card h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1.5px solid #d1e3fa;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        font-size: 1.05rem;
+        padding: 12px 15px;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            background: #f5faff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn-checkout {
+        margin-top: 22px;
+        font-size: 1.08rem;
+        border-radius: 12px;
+        font-weight: 600;
+        background: linear-gradient(90deg, #4f8cff 0%, #007bff 100%);
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 10px rgba(0, 123, 255, 0.08);
+        color: white;
+    }
+
+        .btn-checkout:hover,
+        .btn-checkout:focus {
+            background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15);
+        }
+</style>
+
+<!-- Form thanh toán -->
+<div class="checkout-card">
+    <h2>
+        <i class="bi bi-cash-coin me-2"></i> Thanh toán
+    </h2>
+    <form asp-action="Checkout" method="post" novalidate>
+        <div class="mb-3">
+            <label asp-for="ShippingAddress" class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+            <input asp-for="ShippingAddress" class="form-control" placeholder="Nhập địa chỉ nhận hàng..." />
+            <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label">Ghi chú cho shop</label>
+            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Bạn muốn dặn dò gì thêm không?"></textarea>
+            <span asp-validation-for="Notes" class="text-danger small"></span>
+        </div>
+        <button type="submit" class="btn btn-checkout w-100">
+            <i class="bi bi-check-circle-fill me-2"></i> Đặt hàng ngay
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,89 @@
+﻿body, .product-detail-bg {
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.product-card {
+    background: rgba(255,255,255,0.96);
+    border-radius: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+    border: none;
+    padding: 2.5rem 2rem;
+    margin-top: 2rem;
+    transition: box-shadow 0.3s;
+}
+
+    .product-card:hover {
+        box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    }
+
+.carousel-inner img, .carousel-inner video, .carousel-inner iframe {
+    border-radius: 1.5rem;
+    background: #f5f5fa;
+    transition: transform .3s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+    .carousel-inner img:hover {
+        transform: scale(1.04);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.17);
+    }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #495057;
+    border-radius: 1rem;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}
+
+.product-price {
+    font-size: 2.1rem;
+    color: #10b981;
+    font-weight: 700;
+    letter-spacing: .5px;
+    margin-bottom: 1.1rem;
+    text-shadow: 0 1px 0 #fff, 0 0 12px #a7f3d0;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.1rem;
+    line-height: 1.2;
+}
+
+.product-description {
+    font-size: 1.15rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    border-radius: 1.2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.65rem 2rem;
+    transition: background .2s, color .2s, box-shadow .2s;
+    background: linear-gradient(90deg, #e0eafc, #cfdef3);
+    color: #2d3748;
+    border: 1.5px solid #d1d5db;
+    box-shadow: 0 2px 8px rgba(136,165,191,0.08);
+}
+
+    .btn-back:hover {
+        background: linear-gradient(90deg, #86A8E7, #91EAE4);
+        color: #223;
+        border-color: #60a5fa;
+        box-shadow: 0 6px 24px rgba(56,189,248,0.13);
+    }
+
+@media (max-width: 991.98px) {
+    .product-card {
+        padding: 1.4rem 0.6rem;
+        border-radius: 1.1rem;
+    }
+}

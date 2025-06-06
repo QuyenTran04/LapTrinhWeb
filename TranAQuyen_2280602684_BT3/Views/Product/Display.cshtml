@@ -1,0 +1,116 @@
+﻿@model TranAQuyen_2280602684_BT3.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool isYouTube = !string.IsNullOrEmpty(Model.VideoUrl) &&
+                     (Model.VideoUrl.Contains("youtube.com") || Model.VideoUrl.Contains("youtu.be"));
+
+    string videoEmbedUrl = null;
+
+    if (!string.IsNullOrEmpty(Model.VideoUrl))
+    {
+        if (Model.VideoUrl.Contains("youtube.com/watch?v="))
+        {
+            var videoId = Model.VideoUrl.Split("watch?v=")[1];
+            videoEmbedUrl = "https://www.youtube.com/embed/" + videoId;
+        }
+        else if (Model.VideoUrl.Contains("youtu.be/"))
+        {
+            var videoId = Model.VideoUrl.Split("youtu.be/")[1];
+            videoEmbedUrl = "https://www.youtube.com/embed/" + videoId;
+        }
+        else
+        {
+            videoEmbedUrl = Model.VideoUrl;
+        }
+    }
+}
+
+<div class="container mt-5">
+    <div class="card shadow border-0">
+        <div class="card-body px-5 py-4">
+            <h2 class="text-center text-primary mb-4">Chi Tiết Sản Phẩm</h2>
+
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded shadow-sm overflow-hidden">
+                            @{
+                                int index = 0;
+
+                                // Ảnh đại diện
+                                if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="@Model.ImageUrl" class="d-block w-100" style="height: 400px; object-fit: contain;" />
+                                    </div>
+                                    index++;
+                                }
+
+                                // Ảnh phụ
+                                if (Model.Images != null)
+                                {
+                                    foreach (var img in Model.Images)
+                                    {
+                                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                                            <img src="@img.Url" class="d-block w-100" style="height: 400px; object-fit: contain;" />
+                                        </div>
+                                        index++;
+                                    }
+                                }
+
+                                // Video
+                                if (!string.IsNullOrEmpty(Model.VideoUrl))
+                                {
+                                    <div class="carousel-item @(index == 0 ? "active" : "")">
+                                        @if (isYouTube && !string.IsNullOrEmpty(videoEmbedUrl))
+                                        {
+                                            <div class="ratio ratio-16x9">
+                                                <iframe src="@videoEmbedUrl" title="YouTube Video" allowfullscreen class="w-100 border-0 rounded"></iframe>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="ratio ratio-16x9">
+                                                <video controls class="w-100">
+                                                    <source src="@Model.VideoUrl" type="video/mp4" />
+                                                    Trình duyệt không hỗ trợ video.
+                                                </video>
+                                            </div>
+                                        }
+                                    </div>
+                                    index++;
+                                }
+                            }
+                        </div>
+
+                        @if (index > 1)
+                        {
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <h4 class="mb-3"><strong>Tên:</strong> @Model.Name</h4>
+                    <h4 class="mb-3 text-success"><strong>Giá:</strong> @Model.Price</h4>
+                    <h5 class="mb-2"><strong>Mô tả:</strong></h5>
+                    <p class="text-muted">@Model.Description</p>
+
+                    <div class="mt-5">
+                        <a asp-action="Index" class="btn btn-outline-secondary">← Trở về danh sách</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

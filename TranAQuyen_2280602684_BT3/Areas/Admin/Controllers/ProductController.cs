@@ -24,7 +24,6 @@ namespace TranAQuyen_2280602684_BT3.Areas.Admin.Controllers
         {
             var products = await _productRepository.GetAllAsync();
 
-            // Tìm kiếm
             if (!string.IsNullOrWhiteSpace(searchString))
             {
                 products = products.Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -58,7 +57,7 @@ namespace TranAQuyen_2280602684_BT3.Areas.Admin.Controllers
         }
         // Xử lý thêm sản phẩm mới
         [HttpPost]
-        public async Task<IActionResult> Add(Product product, List<IFormFile> images, IFormFile slide, string videoUrl)
+        public async Task<IActionResult> Add(Product product, List<IFormFile> images, string videoUrl)
         {
             if (ModelState.IsValid)
             {
@@ -68,13 +67,6 @@ namespace TranAQuyen_2280602684_BT3.Areas.Admin.Controllers
                     product.ImageUrl = await SaveImage(images[0]);
                 }
 
-                // Lưu slide
-                if (slide != null)
-                {
-                    product.SlideUrl = await SaveFile(slide, "slides");
-                }
-
-                // Lưu video (link YouTube)
                 if (!string.IsNullOrEmpty(videoUrl))
                 {
                     product.VideoUrl = videoUrl;

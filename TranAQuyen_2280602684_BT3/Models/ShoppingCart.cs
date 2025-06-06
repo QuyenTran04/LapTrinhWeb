@@ -5,14 +5,14 @@
         public List<CartItem> Items { get; set; } = new List<CartItem>();
         public void AddItem(CartItem item)
         {
-            var existingItem = Items.FirstOrDefault(i => i.ProductId ==item.ProductId);
+            var existingItem = Items.FirstOrDefault(i => i.ProductId == item.ProductId);
             if (existingItem != null)
             {
-                existingItem.Quantity += item.Quantity;
+                existingItem.Quantity += item.Quantity; // Nếu sản phẩm đã có trong giỏ, tăng số lượng
             }
             else
             {
-                Items.Add(item);
+                Items.Add(item); // Nếu chưa có, thêm mới sản phẩm vào giỏ
             }
         }
         public void RemoveItem(int productId)
@@ -27,7 +27,7 @@
         // Tính tổng giá trị của giỏ hàng
         public decimal GetTotal()
         {
-            return Items.Sum(i => i.Price * i.Quantity);
+            return Items.Sum(i => i.Price * i.Quantity); 
         }
         // Các phương thức khác...
     }

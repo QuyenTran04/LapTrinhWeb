@@ -1,0 +1,107 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Hoàn tất";
+    ViewBag.CurrentStep = "Done";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        position: relative;
+    }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #ddd;
+            z-index: 0;
+        }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+        flex: 1;
+        position: relative;
+    }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 22px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #ddd;
+            z-index: -1;
+        }
+
+        .step i {
+            font-size: 1.75rem;
+            background-color: #f1f1f1;
+            border-radius: 50%;
+            padding: 10px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .step .label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .step.active i,
+        .step.active .label {
+            color: #28a745;
+            font-weight: bold;
+        }
+</style>
+
+<div class="container pt-4">
+    <!-- Step indicator -->
+    <div class="step-indicator">
+        <div class="step @(ViewBag.CurrentStep == "Cart" ? "active" : "")">
+            <i class="bi bi-bag-fill fs-3"></i>
+            <span class="label">Giỏ hàng</span>
+        </div>
+        <div class="step @(ViewBag.CurrentStep == "Info" ? "active" : "")">
+            <i class="bi bi-card-list fs-3"></i>
+            <span class="label">Thông tin đặt hàng</span>
+        </div>
+        <div class="step @(ViewBag.CurrentStep == "Checkout" ? "active" : "")">
+            <i class="bi bi-credit-card fs-3"></i>
+            <span class="label">Thanh toán</span>
+        </div>
+        <div class="step @(ViewBag.CurrentStep == "Done" ? "active" : "")">
+            <i class="bi bi-check2-circle fs-3"></i>
+            <span class="label">Hoàn tất</span>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="container mt-5">
+        <div class="alert alert-success text-center p-4 rounded shadow-sm">
+            <h2 class="mb-3">🎉 Đặt hàng thành công! 🎉</h2>
+            <p class="fs-5">Đơn hàng của bạn với mã <strong>#@Model</strong> đã được đặt thành công.</p>
+            <p class="mb-4">Cảm ơn bạn đã mua sắm tại cửa hàng chúng tôi!</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-house-door-fill me-1"></i> Tiếp tục mua sắm
+            </a>
+            <a asp-controller="ShoppingCart" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-cart3 me-1"></i> Xem giỏ hàng
+            </a>
+        </div>
+    </div>
+</div>

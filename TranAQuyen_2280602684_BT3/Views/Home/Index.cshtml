@@ -1,37 +1,164 @@
 ﻿@model IEnumerable<TranAQuyen_2280602684_BT3.Models.Product>
-
+@using Microsoft.AspNetCore.Mvc.Rendering
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Quyen";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int numOfQuantity = 1;
 }
 
-<section class="py-2">
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+<style>
+    .product-list-scroll {
+        max-height: 700px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
 
-            @foreach (var item in Model)
-            {
-                <div class="col mb-5">
-                    <div class="card gap-3" style="width: 18rem">
-                        <img src="@item.ImageUrl" class="card-img-top" alt="..." style="height: 300px">
-                        <div class="card-body">
-                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
-                            <div class="d-flex">
-                                <span>Price: </span>
-                                <p class="mx-3">@item.Price.ToString("#,##0") Vnd</p>
-                            </div>
-                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-productId="@item.Id" asp-route-quantity="@numOfQuantity">
-                                <button class="btn btn-outline-dark">
-                                    <i class="bi-cart-fill me-1"></i> Add to Cart
-                                </button>
-                            </a>
+    .product-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+    }
 
-                            
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .product-card img {
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+    .product-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .product-price-new {
+        font-size: 1.3rem;
+        color: #28a745;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .product-meta {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 8px;
+    }
+
+    .stars i {
+        color: #ffc107;
+    }
+
+    .btn-custom {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+
+        .btn-custom:hover {
+            background-color: #007bff;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .btn-buy-now {
+        background: linear-gradient(145deg, #ff5f6d, #ffc371);
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+        .btn-buy-now:hover {
+            background: linear-gradient(145deg, #ff4e4d, #ffa141);
+            transform: translateY(-2px);
+        }
+
+    }
+</style>
+
+<div class="container my-5">
+    <h2 class="fw-bold text-primary text-center mb-5">🛍️ Danh sách sản phẩm</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 product-list-scroll">
+        @foreach (var product in Model)
+        {
+            <div class="col">
+                <div class="product-card h-100">
+                    <a asp-controller="Product" asp-action="Display" asp-route-id="@product.Id">
+                        <img src="@product.ImageUrl" class="img-fluid mb-3" style="height: 180px; object-fit: cover;" alt="@product.Name" />
+                    </a>
+
+                    <div>
+                        <div class="product-name">@product.Name</div>
+                        <div class="product-price-new">@product.Price.ToString("N0") VND</div>
+                        <div class="product-meta">📦 Danh mục: @product.Category?.Name</div>
+
+                        <div class="stars my-2">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
                         </div>
                     </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-outline-primary btn-sm w-100 btn-custom mb-2"
+                                onclick="addToCart(@product.Id)">
+                            🛒 Thêm vào giỏ
+                        </button>
+
+                        <a href="@Url.Action("BuyNow", "ShoppingCart", new { productId = @product.Id })"
+                           class="btn btn-buy-now btn-sm w-100 btn-custom">
+                            ⚡ Mua ngay
+                        </a>
+                    </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
-</section>
+</div>
+
+@section Scripts {
+    <script>
+        function addToCart(productId) {
+            fetch('/ShoppingCart/AddToCartAjax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId: productId, quantity: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    if (typeof loadCartCount === "function") {
+                        loadCartCount();
+                    }
+                } else {
+                    alert("Lỗi: " + data.message);
+                }
+            })
+            .catch(err => {
+                alert("Bạn chưa đăng nhập để thêm vào giỏ hàng.");
+                console.error(err);
+            });
+        }
+    </script>
+}
